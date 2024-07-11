@@ -1,53 +1,66 @@
-import Link from "next/link";
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+"use client";
+import { Button } from "@/components/ui/button";
+import { useDraw } from "@/hooks/useDraw";
+import { api } from "@/trpc/react";
 
-import { LatestPost } from "@/app/_components/post";
-import { api, HydrateClient } from "@/trpc/server";
+export default function Home() {
+  const { canvasRef, onMouseDown, clear } = useDraw(drawLine);
 
-export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
+  const sendImage = api.guess.send.useMutation({});
 
-  void api.post.getLatest.prefetch();
+  const handleGuess = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const imageData = canvas.toDataURL("image/png");
+
+    sendImage.mutate({ image: imageData });
+  };
+
+  function drawLine({ prevPoint, currentPoint, ctx }: Draw) {
+    const { x: currX, y: currY } = currentPoint;
+    const lineColor = "#FFF";
+    const lineWidth = 5;
+
+    const startPoint = prevPoint ?? currentPoint;
+    ctx.beginPath();
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = lineColor;
+    ctx.moveTo(startPoint.x, startPoint.y);
+    ctx.lineTo(currX, currY);
+    ctx.stroke();
+
+    ctx.fillStyle = lineColor;
+    ctx.beginPath();
+    ctx.arc(startPoint.x, startPoint.y, 2, 0, 2 * Math.PI);
+    ctx.fill();
+  }
 
   return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-          </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
-          </div>
-
-          <LatestPost />
-        </div>
-      </main>
-    </HydrateClient>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#151920] via-[#9c72ca] to-[#151920] text-white">
+      <div className="mb-10 inline-block bg-gradient-to-r from-[#4e83ef] via-[#a96fb5] to-[#d96570] bg-clip-text p-4 text-6xl font-medium text-transparent">
+        PictionAIry
+      </div>
+      <div className="mb-5 flex flex-row items-center justify-center gap-4">
+        <Button className="bg-[#1e1f20] hover:bg-[#333537]" onClick={clear}>
+          Clear
+        </Button>
+        <Button
+          className="bg-[#1e1f20] hover:bg-[#333537]"
+          onClick={handleGuess}
+        >
+          Guess
+        </Button>
+      </div>
+      <canvas
+        ref={canvasRef}
+        onMouseDown={onMouseDown}
+        width={750}
+        height={750}
+        className="rounded-md border border-black bg-black"
+      />
+    </div>
   );
 }
