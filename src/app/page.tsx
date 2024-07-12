@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 import { Button } from "@/components/ui/button";
 import { useDraw } from "@/hooks/useDraw";
 import { api } from "@/trpc/react";
+import { useEffect } from "react";
 
 export default function Home() {
   const { canvasRef, onMouseDown, clear } = useDraw(drawLine);
@@ -18,6 +16,10 @@ export default function Home() {
 
     sendImage.mutate({ image: imageData });
   };
+
+  useEffect(() => {
+    if (sendImage.data) console.log(sendImage.data);
+  }, [sendImage.data]);
 
   function drawLine({ prevPoint, currentPoint, ctx }: Draw) {
     const { x: currX, y: currY } = currentPoint;
