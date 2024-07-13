@@ -23,6 +23,7 @@ export default function Home() {
   const [guessCorrect, setGuessCorrect] = useState<boolean>(false);
   const [idea, setIdea] = useState<string>("");
   const [oldIdea, setOldIdea] = useState<string[]>([]);
+  const [streak, setStreak] = useState<number>(0);
 
   const sendImage = api.guess.send.useMutation({});
   const getIdea = api.guess.getIdea.useQuery({ oldIdea });
@@ -30,10 +31,13 @@ export default function Home() {
   const handleCorrect = () => {
     setGuessCorrect(true);
     setGuessOpen(false);
+    setStreak((prevState) => prevState + 1);
+    setTimeout(() => setGuessCorrect(false), 4000);
   };
 
   const handleCancel = () => {
     setGuessOpen(false);
+    setStreak(0);
   };
 
   const onScreenClick = () => setGuessCorrect(false);
@@ -101,6 +105,12 @@ export default function Home() {
         </div>
       </div>
       <div className="mb-5 flex flex-row items-center justify-center gap-4">
+        <div className="flex flex-row items-center justify-self-start">
+          <div className="text-2xl">🔥</div>
+          <div className="bg-gradient-to-r from-[#ffb02e] to-[#ff6723] bg-clip-text text-4xl font-bold text-transparent">
+            {streak}
+          </div>
+        </div>
         <Button className="bg-[#1e1f20] hover:bg-[#333537]" onClick={clear}>
           Clear
         </Button>
@@ -152,7 +162,7 @@ export default function Home() {
           </AlertDialogContent>
         </AlertDialog>
       )}
-      {guessCorrect && <Fireworks autorun={{ speed: 3 }} />}
+      {guessCorrect && <Fireworks autorun={{ speed: 2 }} />}
     </div>
   );
 }
