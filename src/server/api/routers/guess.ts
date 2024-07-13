@@ -15,14 +15,12 @@ export const guessRouter = createTRPCRouter({
   send: publicProcedure
     .input(z.object({ image: z.string() }))
     .mutation(async ({ input }) => {
-      // console.log(input.image);
       const prompt =
         "What has been drawn in this picture? Please answer in as few words as possible.";
 
       const { text, finishReason } = await generateText({
         // model: google("models/gemini-1.5-pro-latest"),
         model: openai("gpt-4-turbo"),
-        // prompt: "What is the capital of France?",
         messages: [
           {
             role: "user",
