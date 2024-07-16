@@ -32,11 +32,15 @@ export default function Home() {
     setGuessCorrect(true);
     setGuessOpen(false);
     setStreak((prevState) => prevState + 1);
-    setTimeout(() => setGuessCorrect(false), 4000);
+    setTimeout(() => {
+      setGuessCorrect(false);
+      setGuess("");
+    }, 4000);
   };
 
   const handleCancel = () => {
     setGuessOpen(false);
+    setGuess("");
     setStreak(0);
   };
 
@@ -48,10 +52,12 @@ export default function Home() {
     const imageData = canvas.toDataURL("image/png");
 
     sendImage.mutate({ image: imageData });
+    setGuessOpen(true);
   };
 
   const getNewIdea = async () => {
     clear();
+    setGuess("");
     setOldIdea((prevState) => [...prevState, idea]);
     await getIdea.refetch();
   };
@@ -63,7 +69,6 @@ export default function Home() {
   useEffect(() => {
     if (sendImage.data) {
       setGuess(sendImage.data.answer);
-      setGuessOpen(true);
       window.addEventListener("mousedown", onScreenClick);
     }
 
@@ -134,34 +139,44 @@ export default function Home() {
         height={750}
         className="rounded-md border border-black bg-black"
       />
-      {guess && (
-        <AlertDialog open={guessOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader className="mb-8">
-              <AlertDialogTitle className="mb-6 text-center text-xl">
-                🥁 🥁 🥁 🥁 🥁 🥁 🥁 🥁
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-center text-4xl font-bold">
-                {guess}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="flex flex-row items-center justify-center gap-10 sm:items-center sm:justify-center">
-              <AlertDialogCancel
-                className="bg-red-500 text-white hover:bg-red-400 hover:text-white"
-                onClick={handleCancel}
-              >
-                Wrong
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-green-500 hover:bg-green-400"
-                onClick={handleCorrect}
-              >
-                Correct
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      <AlertDialog open={guessOpen}>
+        <AlertDialogContent className="min-h-[240px] bg-gradient-to-b from-[#151920] via-[#9c72ca] to-[#151920]">
+          <AlertDialogHeader className="mb-8">
+            <AlertDialogTitle className="mb-6 text-center text-sm">
+              <div className="flex flex-row items-center justify-center text-2xl">
+                <span className="animate-bop-1">🥁 </span>
+                <span className="animate-bop-2">🥁 </span>
+                <span className="animate-bop-3">🥁 </span>
+                <span className="animate-bop-4">🥁 </span>
+                <span className="animate-bop-5">🥁 </span>
+                <span className="animate-bop-6">🥁 </span>
+                <span className="animate-bop-7">🥁 </span>
+              </div>
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-4xl font-bold text-white">
+              {guess}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex flex-row items-center justify-center gap-10 sm:items-center sm:justify-center">
+            {guess && (
+              <>
+                <AlertDialogCancel
+                  className="bg-red-500 text-white hover:bg-red-400 hover:text-white"
+                  onClick={handleCancel}
+                >
+                  Wrong
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-green-500 hover:bg-green-400"
+                  onClick={handleCorrect}
+                >
+                  Correct
+                </AlertDialogAction>
+              </>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {guessCorrect && <Fireworks autorun={{ speed: 2 }} />}
     </div>
   );

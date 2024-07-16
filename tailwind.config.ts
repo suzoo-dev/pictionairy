@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -67,14 +67,60 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        bop: {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "bop-1": {
+          "0%": { transform: "scale(1)" },
+          "15%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "bop-2": {
+          "0%": { transform: "scale(1)" },
+          "30%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "bop-3": {
+          "0%": { transform: "scale(1)" },
+          "45%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "bop-4": {
+          "0%": { transform: "scale(1)" },
+          "60%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "bop-5": {
+          "0%": { transform: "scale(1)" },
+          "75%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "bop-6": {
+          "0%": { transform: "scale(1)" },
+          "90%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "bop-7": {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.5)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "bop-1": "bop 1.5s 150ms ease-in-out  infinite",
+        "bop-2": "bop 1.5s 300ms ease-in-out  infinite",
+        "bop-3": "bop 1.5s 450ms ease-in-out  infinite",
+        "bop-4": "bop 1.5s 600ms ease-in-out  infinite",
+        "bop-5": "bop 1.5s 750ms ease-in-out  infinite",
+        "bop-6": "bop 1.5s 900ms ease-in-out  infinite",
+        "bop-7": "bop 1.5s 1050ms ease-in-out infinite",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;
